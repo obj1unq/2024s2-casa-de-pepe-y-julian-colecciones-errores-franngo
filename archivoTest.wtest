@@ -1,0 +1,69 @@
+import casa.*
+import cosas.*
+
+describe "Las cosas que se compran" {
+
+    method initialize() { //de esta forma, seteo el estado inicial para todos los tests de este describe
+        casaDePepeYJulian.comprar(heladera)
+        casaDePepeYJulian.comprar(cama)
+        casaDePepeYJulian.comprar(plancha)
+    }
+
+    test "lista" {
+        assert.equals(casaDePepeYJulian.cosas(), [heladera, cama, plancha])
+    }
+
+    test "cantidad de cosas es 3" {
+        assert.equals(casaDePepeYJulian.cantidadDeCosasCompradas(), 3)
+    }
+
+    test "tiene electrodoméstico" {
+        assert.that(casaDePepeYJulian.tieneAlgun(electrodomestico))
+    }
+
+    test "tiene mueble" {
+        assert.that(casaDePepeYJulian.tieneAlgun(mueble))
+    }
+
+    test "no tiene comida" {
+        assert.notThat(casaDePepeYJulian.tieneAlgun(comida))
+    }
+
+    test "acaba de comprar electrodomestrico pero no mueble" {
+        assert.that(casaDePepeYJulian.vieneDeComprar(electrodomestico) && !casaDePepeYJulian.vieneDeComprar(mueble))
+    }
+
+    test "es derrochona" {
+        assert.that(casaDePepeYJulian.esDerrochona())
+        assert.equals(casaDePepeYJulian.totalValorDeCosas(), 29200)
+    }
+
+    test "los electrodomesticos son la heladera y la plancha" {
+        assert.equals(casaDePepeYJulian.comprados(electrodomestico), [heladera, plancha])
+    }
+
+    test "los muebles comprados son solo la cama" {
+        assert.equals(casaDePepeYJulian.comprados(mueble), [cama])
+    }
+
+    test "no hay comida comprada" {
+        assert.equals(casaDePepeYJulian.comprados(comida), [])
+    }
+
+    test "no es mala época" {
+        assert.notThat(casaDePepeYJulian.esMalaEpoca()) 
+    }
+
+    test "que falta de una tira de asado, una plancha y un paquete de fideos" {
+        assert.equals(casaDePepeYJulian.queFaltaComprar([tiraDeAsado, plancha, paqueteDeFideos]), [tiraDeAsado, paqueteDeFideos])
+    }
+
+    test "falta comida" {
+        assert.that(casaDePepeYJulian.faltaComida())
+    }
+
+    test "solo se tienen electrodomesticos y muebles" {
+        assert.equals(casaDePepeYJulian.categoriasCompradas(), #{electrodomestico, mueble})
+    }
+
+}
