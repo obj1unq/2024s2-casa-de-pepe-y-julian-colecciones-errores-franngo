@@ -5,6 +5,7 @@ import cuentas.*
 describe "Las cosas que se compran" {
 
     method initialize() { //de esta forma, seteo el estado inicial para todos los tests de este describe
+        casaDePepeYJulian.depositar(200000)
         casaDePepeYJulian.comprar(heladera)
         casaDePepeYJulian.comprar(cama)
         casaDePepeYJulian.comprar(plancha)
