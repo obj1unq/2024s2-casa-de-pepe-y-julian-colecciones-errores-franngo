@@ -69,20 +69,62 @@ describe "Las cosas que se compran" {
 
 }
 
-describe "cuentas bancarias" {
+describe "cuentas bancarias (sin probar excepciones)" {
 
-        //esto hay que arreglarlo
         test "cuenta corriente" {
-            cuentaPrueba.tipoDeCuenta(cuentaCorriente)
-            cuentaPrueba.depositar(1000)
-            assert.equals(cuentaPrueba.saldo(), 1000)
+            cuentaCorriente.depositar(1000)
+            assert.equals(cuentaCorriente.saldo(), 1000)
         }
 
         test "cuenta con gastos" {
-            cuentaPrueba.tipoDeCuenta(cuentaConGastos)
             cuentaConGastos.costoPorOperacion(20)
-            cuentaPrueba.depositar(1000)
-            assert.equals(cuentaPrueba.saldo(), 980)
+            cuentaConGastos.depositar(1000)
+            assert.equals(cuentaConGastos.saldo(), 980)
         }
+
+        test "cuenta combinada" {
+            cuentaConGastos.costoPorOperacion(50) //estado inicial
+            cuentaCorriente.saldo(500) //estado inicial
+            cuentaCombinada.cuentaPrimaria(cuentaConGastos) //estado inicial
+            cuentaCombinada.cuentaSecundaria(cuentaCorriente) //estado inicial
+            cuentaCombinada.depositar(100)
+            cuentaCombinada.extraer(200)
+            assert.equals(cuentaConGastos.saldo(), 50)
+            assert.equals(cuentaCorriente.saldo(), 300)
+            assert.equals(cuentaCombinada.saldo(), 350)
+        }
+
+}
+
+describe "cuentas bancarias (probando excepciones)" {
+
+    method initialize() {
+        cuentaCorriente.saldo(1000) //LA CUENTA CORRIENTE ARRANCA EN 1000 PARA TODOS LOS TESTS DE ESTE DESCRIBE
+        casaDePepeYJulian.cuenta(cuentaCorriente)
+    }
+
+    test "puedo sacar 900" {
+        assert.doesNotThrowException({casaDePepeYJulian.extraer(900)})
+        assert.equals(100, casaDePepeYJulian.saldo())
+    }
+
+    test "no puedo sacar 1200" {
+        assert.throwsException({casaDePepeYJulian.extraer(1200)})
+        assert.equals(1000, casaDePepeYJulian.saldo())
+    }
+
+    test "comprar tira de asado causa que tengan la tira y se reste su precio del saldo" {
+        assert.doesNotThrowException({casaDePepeYJulian.comprar(tiraDeAsado)})
+        assert.equals(casaDePepeYJulian.cantidadDeCosasCompradas(), 1)
+        assert.equals(casaDePepeYJulian.cosas(), [tiraDeAsado])
+        assert.equals(casaDePepeYJulian.saldo(), 650)
+    }
+
+    test "no se puede comprar plancha, por lo que no la tienen y su saldo queda igual" {
+        assert.throwsException({casaDePepeYJulian.comprar(plancha)})
+        assert.equals(casaDePepeYJulian.cantidadDeCosasCompradas(), 0)
+        assert.equals(casaDePepeYJulian.cosas(), [])
+        assert.equals(casaDePepeYJulian.saldo(), 1000)
+    }
 
 }
