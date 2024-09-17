@@ -1,5 +1,6 @@
 import casa.*
 import cosas.*
+import cuentas.*
 
 describe "Las cosas que se compran" {
 
@@ -65,5 +66,23 @@ describe "Las cosas que se compran" {
     test "solo se tienen electrodomesticos y muebles" {
         assert.equals(casaDePepeYJulian.categoriasCompradas(), #{electrodomestico, mueble})
     }
+
+}
+
+describe "cuentas bancarias" {
+
+        //esto hay que arreglarlo
+        test "cuenta corriente" {
+            cuentaPrueba.tipoDeCuenta(cuentaCorriente)
+            cuentaPrueba.depositar(1000)
+            assert.equals(cuentaPrueba.saldo(), 1000)
+        }
+
+        test "cuenta con gastos" {
+            cuentaPrueba.tipoDeCuenta(cuentaConGastos)
+            cuentaConGastos.costoPorOperacion(20)
+            cuentaPrueba.depositar(1000)
+            assert.equals(cuentaPrueba.saldo(), 980)
+        }
 
 }
